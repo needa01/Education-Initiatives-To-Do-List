@@ -74,9 +74,10 @@ class ToDoListManager:
         if self.undo_stack:
             memento = self.undo_stack.pop()
             if memento:
-                task = TaskBuilder(memento.description).with_due_date(memento.due_date).with_completed(memento.completed).build()
+                task = TaskBuilder(memento.description).with_due_date(memento.due_date).with_completed(not(memento.completed)).build()
+                self.delete_task(memento.description)
                 self.tasks.append(task)
-                self.redo_stack.append(TaskMemento(task.description, task.due_date, task.completed))
+                self.redo_stack.append(TaskMemento(task.description, task.due_date, not(task.completed)))
             else:
                 self.tasks.pop()
                 self.redo_stack.append(None)
@@ -86,6 +87,7 @@ class ToDoListManager:
             memento = self.redo_stack.pop()
             if memento:
                 task = TaskBuilder(memento.description).with_due_date(memento.due_date).with_completed(memento.completed).build()
+                self.delete_task(memento.description)
                 self.tasks.append(task)
                 self.undo_stack.append(TaskMemento(task.description, task.due_date, task.completed))
             else:
