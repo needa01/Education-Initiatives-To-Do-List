@@ -1,5 +1,3 @@
-from datetime import datetime
-
 # Memento Pattern: Create a TaskMemento class to store the state of a task.
 class TaskMemento:
     def __init__(self, description, due_date, completed):
